@@ -1,6 +1,7 @@
 package com.example.demo.implement;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 import com.example.demo.models.Etudiant;
@@ -40,7 +41,7 @@ public class EtudiantImplement implements Etudiantservises {
     @Override
     public Etudiant findEtudiantById(Long id) {
         Optional<Etudiant> optional = etudiantRepository.findById(id);
-        return optional.orElse(null); 
+        return optional.orElseThrow(()->new NoSuchElementException("id not found"));
     }
 
     @Override

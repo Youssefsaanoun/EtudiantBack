@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Requests.FisrtNameAndLastNameRequest;
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.models.Etudiant;
 import com.example.demo.servises.Etudiantservises;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,11 @@ public class EtudiantController {
     @GetMapping("/{id}")
     public ResponseEntity<Etudiant> getEtudiantById(@PathVariable Long id) {
         Etudiant etudiant = etudiantservises.findEtudiantById(id);
-        if (etudiant != null) {
-            return ResponseEntity.ok(etudiant);
+        if (etudiant == null) {
+                throw new ResourceNotFoundException("etudiant not foundd");
+
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok(etudiant);
         }
     }
 
@@ -60,19 +62,13 @@ public class EtudiantController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/findByFirstName")
-    public List<Etudiant> findByFirstName(@RequestBody String firstname) {
-        return etudiantservises.findByFirstName(firstname);
-    }
+
 
     @GetMapping("/findByFirstNameAndLastNameWithRB")
     public List<Etudiant> findByFirstNameOrLastName(@RequestBody FisrtNameAndLastNameRequest fisrtNameAndLastNameRequest) {
         return etudiantservises.findByFirstNameOrLastNameWithJPQL(fisrtNameAndLastNameRequest.getFirstName(),fisrtNameAndLastNameRequest.getLastName());
     }
-    @GetMapping("/findByAge")
-    public List<Etudiant> findByAge(@RequestBody List<Integer>ages) {
-        return etudiantservises.findByAgeIn(ages);
-    }
+
     @GetMapping("/findByTitre/{titre}")
     public List<Etudiant> findByTitre(@PathVariable String titre) {
         return etudiantservises.findByRolesTitre(titre);

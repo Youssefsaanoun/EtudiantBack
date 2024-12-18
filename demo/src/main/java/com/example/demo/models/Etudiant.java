@@ -1,8 +1,11 @@
 package com.example.demo.models;
 
+import java.util.List;
 import java.util.Set;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,18 +25,22 @@ import lombok.NoArgsConstructor;
 public class Etudiant {
      @Id
      @GeneratedValue(strategy = GenerationType.IDENTITY)
-     private  Long id ; 
-     private int age ; 
-     private  String firstName ; 
+     private Long id;
+ 
+     private String firstName;
+     private String lastName;
+     private int age;
+ 
+     @Column(nullable = false, unique = true)
+     private String email;
+ 
+     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
+     private List<Addresse> addresses;
+ 
+     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
+     private List<Role> roles;
+     @OneToMany(mappedBy = "etudiant", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Contact> contacts;
 
-     private  String lastName; 
-     @OneToOne(mappedBy = "etudiant",cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
-     private Contact contact ; 
-     @ManyToMany(mappedBy = "etudiant",cascade = {CascadeType.PERSIST},fetch = FetchType.EAGER)
-     private Set<Role> roles;
-     @OneToMany(mappedBy = "etudiant",cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE},fetch = FetchType.EAGER )
-     private Set<Addresse> addresses;
-
-     
 
 }
